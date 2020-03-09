@@ -1,6 +1,7 @@
 // Library
 import React, {Component} from 'react';
 import {Text, View, ScrollView, TextInput, Image, Button} from 'react-native';
+import User from '../../../User';
 
 // Styles
 // import styles from './AppStyle'
@@ -18,7 +19,7 @@ const Chat = props => {
           paddingHorizontal: 40,
           backgroundColor: '#F7E1D8',
         }}>
-        <Text>INI CHATINGAN</Text>
+        <Text>{User.phone}</Text>
         <Text>INI CHATINGAN</Text>
         <Text>INI CHATINGAN</Text>
         <Text>INI CHATINGAN</Text>

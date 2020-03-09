@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  Alert,
 } from 'react-native';
 
 const Profile = props => {
@@ -94,13 +95,33 @@ const Profile = props => {
           Lala Laisa
         </Text>
         {/* <TouchableOpacity style={{backgroundColor=}} title="Back" onPress={() => props.back('visible1')} /> */}
+        <View>
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              marginTop: 100,
+              left: '10%',
+              width: '80%',
+              height: 70,
+              backgroundColor: '#1c313a',
+              borderRadius: 15,
 
+              paddingVertical: 13,
+            }}
+            // onPress={() => props._logOut()}>
+            onPress={() => props.logOut()}>
+            <Text style={{fontSize: 40, color: '#fcdcc8', textAlign: 'center'}}>
+              Logout
+            </Text>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity
           style={styles.button}
           onPress={() => props.back('visible1')}>
           <Text style={styles.buttonText}>«</Text>
         </TouchableOpacity>
       </View>
+
       <View></View>
     </>
   );

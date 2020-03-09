@@ -16,7 +16,11 @@ import MapView, {Marker, Circle, Callout} from 'react-native-maps';
 import Modal, {SlideAnimation, ModalContent} from 'react-native-modals';
 import Chat from './modals/Chat';
 import Profile from './modals/Profile';
+import Logout from './modals/Logout';
 navigator.geolocation = require('@react-native-community/geolocation');
+import AsyncStorage from '@react-native-community/async-storage';
+import firebase from '../config/firebase';
+
 // import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
 const initialState = {
@@ -26,18 +30,27 @@ const initialState = {
   longitudeDelta: 0.05,
 };
 
-const Maps = () => {
+const Maps = props => {
   let myMap;
   const [currentPosition, setCurrentPosition] = useState(initialState);
   const [visible, setVisible] = useState(false);
   const [visible1, setVisible1] = useState(false);
   const [visible2, setVisible2] = useState(false);
+  const [visible3, setVisible3] = useState(false);
+
+  const logOut = () => {
+    // alert('mama');
+    AsyncStorage.clear();
+    props.navigation.navigate('Auth');
+    setVisible1(false);
+  };
 
   const back = data => {
     if (data === 'visible') {
       setVisible(false);
     } else if (data === 'visible1') {
       setVisible1(false);
+      //   console.warn(props.navigation);
     }
   };
 
@@ -69,6 +82,7 @@ const Maps = () => {
       {timeout: 20000, maximumAge: 1000},
     );
   }, []);
+
   return currentPosition.latitude ? (
     <>
       <StatusBar translucent backgroundColor="transparent" />
@@ -103,7 +117,7 @@ const Maps = () => {
           onTouchOutside={() => {
             setVisible1(false);
           }}>
-          <Profile back={back} />
+          <Profile back={back} logOut={logOut} />
         </Modal>
 
         <Modal
@@ -134,6 +148,23 @@ const Maps = () => {
             />
             <Text>INI FRIEND LIST</Text>
           </View>
+        </Modal>
+        <Modal
+          style={{paddingTop: 300, borderRadius: 50}}
+          transparent={true}
+          visible={visible3}
+          modalAnimation={
+            new SlideAnimation({
+              slideFrom: 'bottom',
+            })
+          }
+          onBackButtonPress={() => {
+            setVisible3(false);
+          }}
+          onTouchOutside={() => {
+            setVisible3(false);
+          }}>
+          <Logout back={back} />
         </Modal>
       </View>
 
@@ -175,7 +206,7 @@ const Maps = () => {
       <View style={{position: 'absolute', top: '52%', alignSelf: 'flex-end'}}>
         <TouchableOpacity
           style={{
-            top: '400%',
+            top: '394%',
             right: '15%',
             width: 80,
             height: 80,
@@ -186,16 +217,13 @@ const Maps = () => {
           onPress={() => setVisible1(true)}>
           <Image
             style={{
-              width: '100%',
+              width: 80,
               height: 80,
               borderRadius: 30,
               //   borderWidth: 1,
               borderColor: '#33cccc',
             }}
-            source={{
-              uri:
-                'https://warta.smanmba.sch.id/images/if_skype2512x512_197582.png',
-            }}
+            source={require('../images/profile.png')}
           />
         </TouchableOpacity>
       </View>
@@ -220,10 +248,7 @@ const Maps = () => {
               //   borderWidth: 1,
               borderColor: '#33cccc',
             }}
-            source={{
-              uri:
-                'https://lh3.googleusercontent.com/proxy/EuZhzgoF6qAiiKBiEIQj_xfzsf8B4N3nxFVYENQNI8oX4V288Dag7eAoUvdINcZh8cHt8Z7PQm8iF9IMA4hfUhvvjaaKii_aUDAkWeO_8Ta31f9zlM9vuNtAXQC3bNQTHEz0FIjYceJO1p5rO4nIPwjigjxOWic',
-            }}
+            source={require('../images/friend.png')}
           />
         </TouchableOpacity>
       </View>
