@@ -20,6 +20,7 @@ import FriendList from './modals/FriendList';
 navigator.geolocation = require('@react-native-community/geolocation');
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase from '../config/firebase';
+import User from '../../User';
 
 const initialState = {
   latitude: null,
@@ -113,11 +114,15 @@ export default class Maps extends Component {
     dbRef.on('child_added', val => {
       let person = val.val();
       person.phone = val.key;
-      this.setState(prevState => {
-        return {
-          users: [...prevState.users, person],
-        };
-      });
+      if (person.phone === User.phone) {
+        User.name = person.name;
+      } else {
+        this.setState(prevState => {
+          return {
+            users: [...prevState.users, person],
+          };
+        });
+      }
     });
   };
 

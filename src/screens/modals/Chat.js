@@ -1,5 +1,5 @@
 // Library
-import React, {Component, useState} from 'react';
+import React, {Component, useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -8,6 +8,8 @@ import {
   Image,
   TouchableOpacity,
   Button,
+  FlatList,
+  Dimensions,
 } from 'react-native';
 import User from '../../../User';
 import firebase from '../../config/firebase';
@@ -15,8 +17,11 @@ import firebase from '../../config/firebase';
 // Styles
 // import styles from './AppStyle'
 
+let {height, width} = Dimensions.get('window');
+
 const Chat = props => {
   const [textMessage, setTextMessage] = useState('');
+  const [messageList, setMessageList] = useState([]);
 
   const sendMessage = async () => {
     if (textMessage.length > 0) {
@@ -45,8 +50,42 @@ const Chat = props => {
       setTextMessage('');
     }
   };
+
+  // const renderRow = ({item}) => {
+  //   return (
+  //     <View
+  //       style={{
+  //         flexDirection: 'row',
+  //         width: '60%',
+  //         alignSelf: item.from === User.phone ? 'flex-end' : 'flex-start',
+  //         backgroundColor: item.from === User.phone ? '#00897b' : '#7cb342',
+  //         borderRadius: 5,
+  //         marginBottom: 10,
+  //       }}>
+  //       <Text style={{color: '#fff', padding: 7, fontSize: 16}}>
+  //         {item.message}
+  //       </Text>
+  //       <Text style={{color: '#eee', padding: 3, fontSize: 12}}>
+  //         {item.time}
+  //       </Text>
+  //     </View>
+  //   );
+  // };
   // console.warn(props.data);
   let onChat = [];
+
+  useEffect(() => {
+    let data = [];
+    firebase
+      .database()
+      .ref('messages')
+      .child(User.phone)
+      .child(props.chatInfo.phone)
+      .on('child_added', value => {
+        data.push(value.val());
+        setMessageList(data);
+      });
+  }, []);
 
   return (
     <>
@@ -67,16 +106,60 @@ const Chat = props => {
       </View>
       <ScrollView
         style={{
+          // top: 30,
           height: 730,
           width: 490,
           bottom: 0,
           paddingHorizontal: 40,
           backgroundColor: '#F7E1D8',
         }}>
-        {props.data.map(e => {
-          onChat = e.name;
-          return <Text>{onChat}</Text>;
+        {messageList.map(e => {
+          return (
+            <View
+              style={{
+                top: 30,
+                flexDirection: 'row',
+                width: '60%',
+                alignSelf: e.from === User.phone ? 'flex-end' : 'flex-start',
+                backgroundColor: e.from === User.phone ? '#00897b' : '#7cb342',
+                borderRadius: 5,
+                marginBottom: 30,
+              }}>
+              <Text style={{color: '#fff', padding: 7, fontSize: 18}}>
+                {e.messages}
+              </Text>
+              <Text style={{color: '#eee', padding: 3, fontSize: 12}}>
+                {e.time}
+              </Text>
+            </View>
+          );
         })}
+
+        {/* 
+        <View
+          
+          style={{
+            flexDirection: 'row',
+            width: '60%',
+            alignSelf: item.from === User.phone ? 'flex-end' : 'flex-start',
+            backgroundColor: item.from === User.phone ? '#00897b' : '#7cb342',
+            borderRadius: 5,
+            marginBottom: 10,
+          }}>
+          <Text style={{color: '#fff', padding: 7, fontSize: 16}}>
+            {item.message}
+          </Text>
+          <Text style={{color: '#eee', padding: 3, fontSize: 12}}>
+            {item.time}
+          </Text>
+        </View>
+
+        <FlatList
+          style={{padding: 10, height: (height = 1.8)}}
+          data={messageList}
+          renderItem={renderRow}
+          keyExtractor={(item, index) => index.toString()}
+        /> */}
         <Text>{textMessage}</Text>
       </ScrollView>
       <View style={{backgroundColor: '#F7E1D8'}}>
