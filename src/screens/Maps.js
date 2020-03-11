@@ -60,7 +60,7 @@ export default class Maps extends Component {
           name: 'Handika',
           phone: '085669682467',
           pict:
-            'https://instagram.fcgk18-1.fna.fbcdn.net/v/t51.2885-15/sh0.08/e35/c0.135.1080.1080a/s640x640/66145963_433941947201989_736978589736860900_n.jpg?_nc_ht=instagram.fcgk18-1.fna.fbcdn.net&_nc_cat=101&_nc_ohc=i0N0NbGs94cAX-rwwy2&oh=2156e94ae806b6acf92c1f86b963e994&oe=5E91514E',
+            'https://pps.whatsapp.net/v/t61.24694-24/57586771_376603533196585_1678423947411980288_n.jpg?oe=5E6D5115&oh=daa1d89e346cb4914ec157ee0dc42549',
         },
       ],
     };
@@ -102,10 +102,37 @@ export default class Maps extends Component {
 
     this.setState({visible2: false});
     this.setState({visible: true});
-    this.myMap.fitToCoordinates([this.state.currentPosition], {
-      edgePadding: {top: 50, right: 50, bottom: 1400, left: 50},
-      animated: true,
-    });
+    if (data.name === 'Udin') {
+      this.myMap.fitToCoordinates(
+        [
+          {
+            latitude: -6.374703,
+            longitude: 106.832771,
+            latitudeDelta: 0,
+            longitudeDelta: 0.05,
+          },
+        ],
+        {
+          edgePadding: {top: 50, right: 50, bottom: 1400, left: 50},
+          animated: true,
+        },
+      );
+    } else if (data.name === 'Handika') {
+      this.myMap.fitToCoordinates(
+        [
+          {
+            latitude: -6.404312,
+            longitude: 106.841698,
+            latitudeDelta: 0,
+            longitudeDelta: 0.05,
+          },
+        ],
+        {
+          edgePadding: {top: 50, right: 50, bottom: 1400, left: 50},
+          animated: true,
+        },
+      );
+    }
   };
 
   getcoordinate = () => {
@@ -176,6 +203,7 @@ export default class Maps extends Component {
 
   componentDidMount() {
     this.getcoordinate();
+    console.warn(this.state.users);
   }
 
   UNSAFE_componentWillMount() {
