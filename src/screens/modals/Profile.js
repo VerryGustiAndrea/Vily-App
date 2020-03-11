@@ -9,6 +9,7 @@ import {
   Image,
   Alert,
 } from 'react-native';
+import User from '../../../User';
 
 const Profile = props => {
   return (
@@ -36,7 +37,7 @@ const Profile = props => {
               'https://www.kanal247.com/images/media/300x188/2018/03/27/14315.jpg',
           }}
         />
-        <View style={{top: 40, borderRadius: 20}}>
+        <View style={{borderRadius: 20}}>
           <Text
             style={{
               padding: 20,
@@ -46,10 +47,17 @@ const Profile = props => {
               fontSize: 40,
               fontFamily: 'monospace',
             }}>
-            Lala Laisa
+            {User.name}
           </Text>
         </View>
-        <View style={{top: 70, width: '35%', borderWidth: 2, borderRadius: 30}}>
+        <View
+          style={{
+            alignSelf: 'center',
+            top: 10,
+            width: '80%',
+            borderWidth: 2,
+            borderRadius: 30,
+          }}>
           <Text
             style={{
               textAlign: 'center',
@@ -59,14 +67,35 @@ const Profile = props => {
               fontSize: 30,
               fontFamily: 'monospace',
             }}>
-            Gender
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi amet,
+            blandit ut malesuada aliquet. Tempus sem neque eget rutrum cras in.
+            Nisi, orci odio aliquet ultricies in.
           </Text>
         </View>
-
         <View
           style={{
-            top: 10,
-            width: '35%',
+            top: 30,
+            width: '45%',
+            alignSelf: 'flex-start',
+            borderWidth: 2,
+            borderRadius: 30,
+          }}>
+          <Text
+            style={{
+              textAlign: 'center',
+              padding: 10,
+              color: '#405233',
+              fontWeight: 'bold',
+              fontSize: 30,
+              fontFamily: 'monospace',
+            }}>
+            08-08-1997
+          </Text>
+        </View>
+        <View
+          style={{
+            top: -30,
+            width: '45%',
             alignSelf: 'flex-end',
             borderWidth: 2,
             borderRadius: 30,
@@ -83,23 +112,22 @@ const Profile = props => {
             Girl
           </Text>
         </View>
-
         <Text
           style={{
-            top: 60,
             color: '#405233',
             fontWeight: 'bold',
-            fontSize: 30,
+            fontSize: 22,
             fontFamily: 'monospace',
+            textAlign: 'center',
           }}>
-          Lala Laisa
+          Lorem ipsum dolor sit amet,
         </Text>
         {/* <TouchableOpacity style={{backgroundColor=}} title="Back" onPress={() => props.back('visible1')} /> */}
         <View>
           <TouchableOpacity
             style={{
               position: 'absolute',
-              marginTop: 100,
+              marginTop: 10,
               left: '10%',
               width: '80%',
               height: 70,

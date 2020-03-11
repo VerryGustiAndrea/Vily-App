@@ -8,6 +8,7 @@ import {
   View,
   StatusBar,
   Alert,
+  Image,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase from './../config/firebase';
@@ -57,6 +58,16 @@ export default class Login extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <Image
+          style={{
+            alignSelf: 'center',
+            width: 118,
+            height: 200,
+            top: -200,
+            paddingBottom: 100,
+          }}
+          source={require('../images/logo.png')}
+        />
         <TextInput
           placeholder="Phone Number"
           keyboardType="number-pad"
@@ -83,19 +94,27 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#fcdcc8',
   },
   input: {
     padding: 10,
-    borderWidth: 1,
+    borderWidth: 3,
     borderColor: '#ccc',
     width: '90%',
     borderRadius: 10,
     padding: 15,
     margin: 15,
+    top: -50,
   },
   btnText: {
+    top: 20,
+    width: 200,
+    textAlign: 'center',
     color: 'darkblue',
     fontSize: 20,
+    borderWidth: 3,
+    borderColor: '#ccc',
+    padding: 10,
+    borderRadius: 10,
   },
 });

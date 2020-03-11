@@ -149,7 +149,13 @@ const Chat = props => {
               <Text style={{color: '#fff', padding: 7, fontSize: 18}}>
                 {e.messages}
               </Text>
-              <Text style={{color: '#eee', padding: 3, fontSize: 12}}>
+              <Text
+                style={{
+                  color: '#eee',
+                  top: 20,
+                  textAlign: 'right',
+                  fontSize: 12,
+                }}>
                 {convertTime(e.time)}
               </Text>
             </View>
@@ -198,6 +204,7 @@ const Chat = props => {
       </TouchableOpacity>
     </>
   );
+  filterName(props.dataFriend);
 };
 
 export default Chat;

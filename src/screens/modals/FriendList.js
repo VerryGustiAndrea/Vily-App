@@ -18,13 +18,36 @@ import firebase from '../../config/firebase';
 
 const FriendList = props => {
   let [textSearch, setTextSearch] = useState('');
-  let [filter, setFilter] = useState([]);
+  let [filterFriend, setFilterFriend] = useState([]);
+  let [filterUsers, setFilterUsers] = useState({});
 
   const filterSubmit = () => {
-    filter = props.data.filter(e => {
+    filterFriend = props.dataFriend.filter(e => {
       return e.name.toLowerCase().indexOf(textSearch.toLowerCase()) !== -1;
     });
-    setFilter(filter);
+    filterUsers = props.dataUsers.filter(e => {
+      return e.name.toLowerCase().indexOf(textSearch.toLowerCase()) !== -1;
+    });
+    if (filterFriend[0] === undefined) {
+      setFilterFriend(filterUsers);
+    } else {
+      setFilterFriend([]);
+    }
+  };
+
+  let filterName = data => {
+    // console.warn(data);
+    filterUsers = props.dataUsers.filter(a => {
+      return a.phone.toLowerCase().indexOf(data.toLowerCase()) !== -1;
+    });
+    setFilterUsers(filterUsers);
+    console.warn(filterUsers);
+
+    const datax = {
+      name: filterUsers.name,
+      phone: filterUsers.phone,
+    };
+    // props.chat(datax);
   };
 
   const addFriend = async data => {
@@ -36,7 +59,7 @@ const FriendList = props => {
       status: 0,
     };
     let messages2 = {
-      name: data.name,
+      name: User.name,
       status: 1,
     };
     updates['friend/' + User.phone + '/' + data.phone] = messages1;
@@ -112,10 +135,15 @@ const FriendList = props => {
         </View>
         <View>
           {textSearch.length === 0
-            ? props.data.map(e => {
-                users = e.name;
+            ? props.dataFriend.map(e => {
+                e.name;
                 return (
                   <>
+                    {() => {
+                      filterName(e.phone);
+                    }}
+                    {console.warn(filterUsers)}
+
                     <TouchableOpacity
                       onPress={() => props.chat({name: e.name, phone: e.phone})}
                       style={{
@@ -124,24 +152,43 @@ const FriendList = props => {
                         borderBottomWidth: 1,
                         //   backgroundColor: 'red',
                       }}>
-                      <Text style={{fontSize: 20}}>{users}</Text>
+                      <Text style={{fontSize: 20}}>{e.name}</Text>
                     </TouchableOpacity>
                   </>
                 );
               })
-            : filter.map(e => {
-                users = e.name;
+            : filterFriend.map(e => {
                 return (
                   <>
                     <TouchableOpacity
-                      onPress={() => addFriend({name: e.name, phone: e.phone})}
+                      // onPress={() => addFriend({name: e.name, phone: e.phone})}
                       style={{
-                        padding: 30,
+                        paddingVertical: 30,
+                        width: 200,
                         borderBottomColor: '#ccc',
                         borderBottomWidth: 1,
                         //   backgroundColor: 'red',
                       }}>
-                      <Text style={{fontSize: 20}}>{users}</Text>
+                      <Text style={{fontSize: 20}}>{e.name}</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={{
+                        top: 30,
+                        right: 20,
+                        position: 'absolute',
+                      }}
+                      onPress={() => addFriend({name: e.name, phone: e.phone})}>
+                      <Image
+                        style={{
+                          width: 35,
+                          height: 35,
+                        }}
+                        source={{
+                          uri:
+                            'https://cdn4.iconfinder.com/data/icons/eldorado-user/40/add_friend-512.png',
+                        }}
+                      />
                     </TouchableOpacity>
                   </>
                 );

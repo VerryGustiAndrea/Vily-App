@@ -171,7 +171,7 @@ export default class Maps extends Component {
         });
       }
     });
-    console.warn(this.state.friendList);
+    // console.warn(this.state.friendList);
   };
 
   componentDidMount() {
@@ -239,7 +239,8 @@ export default class Maps extends Component {
             }}>
             <FriendList
               back={this.back}
-              data={this.state.friendList}
+              dataFriend={this.state.friendList}
+              dataUsers={this.state.users}
               key={this.state.users.name}
               chat={this.chat}
             />
@@ -261,7 +262,7 @@ export default class Maps extends Component {
                 // this.setState({chatInfo: ''});
                 this.setState({visible1: true});
                 this.myMap.fitToCoordinates([this.state.currentPosition], {
-                  edgePadding: {top: 50, right: 50, bottom: 1400, left: 50},
+                  edgePadding: {top: 50, right: 50, bottom: 50, left: 50},
                   animated: true,
                 });
               }}>
@@ -429,26 +430,6 @@ export default class Maps extends Component {
     );
   }
 }
-
-// import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-
-// const Maps = props => {
-//   useEffect(() => {
-//     navigator.geolocation.getCurrentPosition(
-//       position => {
-//         // alert(JSON.stringify(position));
-//         const {longitude, latitude} = position.coords;
-//         setCurrentPosition({
-//           ...currentPosition,
-//           latitude,
-//           longitude,
-//         });
-//       },
-//       error => alert(error.message),
-//       {timeout: 20000, maximumAge: 1000},
-//     );
-//   }, []);
-// };
 
 const styles = StyleSheet.create({
   container: {
