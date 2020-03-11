@@ -41,8 +41,28 @@ export default class Maps extends Component {
       currentPosition: initialState,
 
       users: [],
+      friendList: [],
       onChat: [],
       chatInfo: {},
+      markerInfo: {},
+      FriendMarker: [
+        {
+          latitude: -6.374703,
+          longitude: 106.832771,
+          name: 'Udin',
+          phone: '0000000000000',
+          pict:
+            'https://instagram.fcgk18-1.fna.fbcdn.net/v/t51.2885-15/sh0.08/e35/c0.135.1080.1080a/s640x640/66145963_433941947201989_736978589736860900_n.jpg?_nc_ht=instagram.fcgk18-1.fna.fbcdn.net&_nc_cat=101&_nc_ohc=i0N0NbGs94cAX-rwwy2&oh=2156e94ae806b6acf92c1f86b963e994&oe=5E91514E',
+        },
+        {
+          latitude: -6.404312,
+          longitude: 106.841698,
+          name: 'Handika',
+          phone: '085669682467',
+          pict:
+            'https://instagram.fcgk18-1.fna.fbcdn.net/v/t51.2885-15/sh0.08/e35/c0.135.1080.1080a/s640x640/66145963_433941947201989_736978589736860900_n.jpg?_nc_ht=instagram.fcgk18-1.fna.fbcdn.net&_nc_cat=101&_nc_ohc=i0N0NbGs94cAX-rwwy2&oh=2156e94ae806b6acf92c1f86b963e994&oe=5E91514E',
+        },
+      ],
     };
   }
 
@@ -109,6 +129,7 @@ export default class Maps extends Component {
     );
   };
 
+  //get seluruh user kecuali dia sendiri
   getData = () => {
     let dbRef = firebase.database().ref('users');
     dbRef.on('child_added', val => {
@@ -132,14 +153,34 @@ export default class Maps extends Component {
     });
   }
 
+  getDataFriendList = async () => {
+    let dbRef = firebase
+      .database()
+      .ref('friend')
+      .child(User.phone);
+    await dbRef.on('child_added', val => {
+      let person = val.val();
+      person.phone = val.key;
+      if (person.phone === User.phone) {
+        User.name = person.name;
+      } else {
+        this.setState(prevState => {
+          return {
+            friendList: [...prevState.friendList, person],
+          };
+        });
+      }
+    });
+    console.warn(this.state.friendList);
+  };
+
   componentDidMount() {
     this.getcoordinate();
-
-    // console.warn(this.state.users);
   }
 
   UNSAFE_componentWillMount() {
     this.getData();
+    this.getDataFriendList();
   }
   render() {
     return this.state.currentPosition.latitude ? (
@@ -198,7 +239,7 @@ export default class Maps extends Component {
             }}>
             <FriendList
               back={this.back}
-              data={this.state.users}
+              data={this.state.friendList}
               key={this.state.users.name}
               chat={this.chat}
             />
@@ -217,8 +258,8 @@ export default class Maps extends Component {
               style={styles.marker}
               coordinate={this.state.currentPosition}
               onPress={() => {
-                this.setState({chatInfo: ''});
-                this.setState({visible: true});
+                // this.setState({chatInfo: ''});
+                this.setState({visible1: true});
                 this.myMap.fitToCoordinates([this.state.currentPosition], {
                   edgePadding: {top: 50, right: 50, bottom: 1400, left: 50},
                   animated: true,
@@ -239,6 +280,59 @@ export default class Maps extends Component {
                 }}
               />
             </Marker>
+            {this.state.FriendMarker.map(e => {
+              return (
+                <Marker
+                  style={styles.marker}
+                  coordinate={{
+                    latitude: e.latitude,
+                    longitude: e.longitude,
+                    latitudeDelta: 0,
+                    longitudeDelta: 0.05,
+                  }}
+                  onPress={() => {
+                    let data = {
+                      name: e.name,
+                      phone: e.phone,
+                    };
+                    this.setState({chatInfo: data});
+                    this.setState({visible: true});
+                    this.myMap.fitToCoordinates(
+                      [
+                        {
+                          latitude: e.latitude,
+                          longitude: e.longitude,
+                          latitudeDelta: 0,
+                          longitudeDelta: 0.05,
+                        },
+                      ],
+                      {
+                        edgePadding: {
+                          top: 50,
+                          right: 50,
+                          bottom: 1400,
+                          left: 50,
+                        },
+                        animated: true,
+                      },
+                    );
+                  }}>
+                  <Image
+                    style={{
+                      marginTop: '100%',
+                      width: '100%',
+                      height: '45%',
+                      borderRadius: 50,
+                      borderWidth: 5,
+                      borderColor: '#A5EACF',
+                    }}
+                    source={{
+                      uri: e.pict,
+                    }}
+                  />
+                </Marker>
+              );
+            })}
           </MapView>
         </View>
         <View style={{position: 'absolute', top: '52%', alignSelf: 'flex-end'}}>
@@ -317,7 +411,21 @@ export default class Maps extends Component {
         </View>
       </>
     ) : (
-      <ActivityIndicator style={{flex: 1}} animating size="large" />
+      <View
+        style={{
+          width: '100%',
+          height: '100%',
+          justifyContent: 'center',
+          backgroundColor: '#fcdcc8',
+        }}>
+        <Image
+          style={{
+            alignSelf: 'center',
+          }}
+          source={require('../images/logo.png')}
+        />
+        <ActivityIndicator style={{top: 100}} animating size="large" />
+      </View>
     );
   }
 }

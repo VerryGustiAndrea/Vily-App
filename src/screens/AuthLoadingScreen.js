@@ -1,6 +1,6 @@
 // Library
 import React, {Component} from 'react';
-import {ActivityIndicator, StatusBar, Text, View} from 'react-native';
+import {ActivityIndicator, StatusBar, Text, View, Image} from 'react-native';
 import firebase from '../config/firebase';
 import User from '../../User';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -23,9 +23,20 @@ export default class AuthLoadingScreen extends React.Component {
   }
   render() {
     return (
-      <View>
-        <ActivityIndicator />
-        <StatusBar barStyle="default" />
+      <View
+        style={{
+          width: '100%',
+          height: '100%',
+          justifyContent: 'center',
+          backgroundColor: '#fcdcc8',
+        }}>
+        <Image
+          style={{
+            alignSelf: 'center',
+          }}
+          source={require('../images/logo.png')}
+        />
+        <ActivityIndicator style={{top: 100}} animating size="large" />
       </View>
     );
   }

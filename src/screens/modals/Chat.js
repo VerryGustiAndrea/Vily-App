@@ -17,11 +17,10 @@ import firebase from '../../config/firebase';
 // Styles
 // import styles from './AppStyle'
 
-let {height, width} = Dimensions.get('window');
-
 const Chat = props => {
   const [textMessage, setTextMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
+  let data = [];
 
   const sendMessage = async () => {
     if (textMessage.length > 0) {
@@ -74,8 +73,30 @@ const Chat = props => {
   // console.warn(props.data);
   let onChat = [];
 
+  // const dataChat = async () => {
+  //   let data = [];
+  //   await firebase
+  //     .database()
+  //     .ref('messages')
+  //     .child(User.phone)
+  //     .child(props.chatInfo.phone)
+  //     .on('child_added', value => {
+  //       data.push(value.val());
+  //       setMessageList(data);
+  //     });
+  // };
+  const convertTime = time => {
+    let d = new Date(time);
+    let c = new Date();
+    let result = (d.getHours() < 10 ? '0' : '') + d.getHours() + ':';
+    result += (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+    if (c.getDay() !== d.getDay()) {
+      result = d.getDay() + ' ' + d.getMonth() + ' ' + result;
+    }
+    return result;
+  };
+
   useEffect(() => {
-    let data = [];
     firebase
       .database()
       .ref('messages')
@@ -83,7 +104,7 @@ const Chat = props => {
       .child(props.chatInfo.phone)
       .on('child_added', value => {
         data.push(value.val());
-        setMessageList(data);
+        setMessageList([...data]);
       });
   }, []);
 
@@ -129,38 +150,11 @@ const Chat = props => {
                 {e.messages}
               </Text>
               <Text style={{color: '#eee', padding: 3, fontSize: 12}}>
-                {e.time}
+                {convertTime(e.time)}
               </Text>
             </View>
           );
         })}
-
-        {/* 
-        <View
-          
-          style={{
-            flexDirection: 'row',
-            width: '60%',
-            alignSelf: item.from === User.phone ? 'flex-end' : 'flex-start',
-            backgroundColor: item.from === User.phone ? '#00897b' : '#7cb342',
-            borderRadius: 5,
-            marginBottom: 10,
-          }}>
-          <Text style={{color: '#fff', padding: 7, fontSize: 16}}>
-            {item.message}
-          </Text>
-          <Text style={{color: '#eee', padding: 3, fontSize: 12}}>
-            {item.time}
-          </Text>
-        </View>
-
-        <FlatList
-          style={{padding: 10, height: (height = 1.8)}}
-          data={messageList}
-          renderItem={renderRow}
-          keyExtractor={(item, index) => index.toString()}
-        /> */}
-        <Text>{textMessage}</Text>
       </ScrollView>
       <View style={{backgroundColor: '#F7E1D8'}}>
         <TextInput
