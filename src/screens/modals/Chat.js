@@ -1,5 +1,5 @@
 // Library
-import React, {Component, useState, useEffect} from 'react';
+import React, {Component, useState, useEffect, useRef} from 'react';
 import {
   Text,
   View,
@@ -21,7 +21,7 @@ const Chat = props => {
   const [textMessage, setTextMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
   let data = [];
-
+  const scrollViewRef = useRef();
   const sendMessage = async () => {
     if (textMessage.length > 0) {
       let msgId = firebase
@@ -112,27 +112,52 @@ const Chat = props => {
     <>
       {/* <Button title={props.chatName} onPress={() => props.back('visible')} /> */}
       <View>
-        <Text
+        <View
           style={{
-            textAlign: 'center',
-            fontSize: 20,
-            fontWeight: 'bold',
-            padding: 20,
-            borderBottomColor: '#ccc',
-            borderBottomWidth: 1,
             backgroundColor: '#F9F5F0',
           }}>
-          {props.chatInfo.name}
-        </Text>
+          <Image
+            style={{
+              marginTop: '3%',
+              width: 50,
+              height: 50,
+              alignSelf: 'center',
+              borderRadius: 100,
+              borderWidth: 5,
+              borderColor: '#A5EACF',
+              paddingBottom: 10,
+            }}
+            source={{
+              uri:
+                'https://instagram.ftkg1-1.fna.fbcdn.net/v/t51.2885-15/e35/32135660_168337707179036_4421957384314814464_n.jpg?_nc_ht=instagram.ftkg1-1.fna.fbcdn.net&_nc_cat=108&_nc_ohc=lL_B49m3tpYAX8OzUZX&oh=f17dbe9c44261ccaad7cd2222d34ae7a&oe=5EA02AD2',
+            }}
+          />
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: 20,
+              fontWeight: 'bold',
+              // padding: 20,
+              borderBottomColor: '#ccc',
+              borderBottomWidth: 1,
+              backgroundColor: '#F9F5F0',
+            }}>
+            {props.chatInfo.name}
+          </Text>
+        </View>
       </View>
       <ScrollView
+        ref={scrollViewRef}
         style={{
-          // top: 30,
           height: 730,
           width: 490,
           bottom: 0,
           paddingHorizontal: 40,
           backgroundColor: '#F7E1D8',
+        }}
+        ref={scrollViewRef}
+        onContentSizeChange={(contentWidth, contentHeight) => {
+          scrollViewRef.current.scrollToEnd({animated: true});
         }}>
         {messageList.map(e => {
           return (

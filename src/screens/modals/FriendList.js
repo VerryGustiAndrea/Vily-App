@@ -81,6 +81,8 @@ const FriendList = props => {
           width: 350,
           bottom: 0,
           padding: 40,
+          // borderTopRightRadius: 50,
+          // borderBottomRightRadius: 50,
           backgroundColor: '#fcdcc8',
         }}>
         <Text
@@ -133,7 +135,7 @@ const FriendList = props => {
             />
           </TouchableOpacity>
         </View>
-        <View>
+        <View style={{backgroundColor: '#fff', borderRadius: 10}}>
           {textSearch.length === 0
             ? props.dataFriend.map(e => {
                 e.name;
@@ -142,12 +144,12 @@ const FriendList = props => {
                     {() => {
                       filterName(e.phone);
                     }}
-                    {console.warn(filterUsers)}
+                    {/* {console.warn(filterUsers)} */}
 
                     <TouchableOpacity
                       onPress={() => props.chat({name: e.name, phone: e.phone})}
                       style={{
-                        padding: 30,
+                        padding: 25,
                         borderBottomColor: '#ccc',
                         borderBottomWidth: 1,
                         //   backgroundColor: 'red',
@@ -169,7 +171,7 @@ const FriendList = props => {
                         borderBottomWidth: 1,
                         //   backgroundColor: 'red',
                       }}>
-                      <Text style={{fontSize: 20}}>{e.name}</Text>
+                      <Text style={{left: 25, fontSize: 20}}>{e.name}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity

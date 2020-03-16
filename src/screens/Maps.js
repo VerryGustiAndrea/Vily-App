@@ -21,6 +21,7 @@ navigator.geolocation = require('@react-native-community/geolocation');
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase from '../config/firebase';
 import User from '../../User';
+import Geocoder from 'react-native-geocoding';
 
 const initialState = {
   latitude: null,
@@ -28,13 +29,12 @@ const initialState = {
   latitudeDelta: 0,
   longitudeDelta: 0.05,
 };
-
 export default class Maps extends Component {
   constructor() {
     super();
     this.state = {
       visible: false,
-      visble1: false,
+      visible1: false,
       visible2: false,
       visible3: false,
 
@@ -47,24 +47,37 @@ export default class Maps extends Component {
       markerInfo: {},
       FriendMarker: [
         {
-          latitude: -6.374703,
-          longitude: 106.832771,
+          latitude: -5.382269,
+          longitude: 105.259366,
           name: 'Udin',
           phone: '0000000000000',
           pict:
             'https://instagram.fcgk18-1.fna.fbcdn.net/v/t51.2885-15/sh0.08/e35/c0.135.1080.1080a/s640x640/66145963_433941947201989_736978589736860900_n.jpg?_nc_ht=instagram.fcgk18-1.fna.fbcdn.net&_nc_cat=101&_nc_ohc=i0N0NbGs94cAX-rwwy2&oh=2156e94ae806b6acf92c1f86b963e994&oe=5E91514E',
         },
         {
-          latitude: -6.404312,
-          longitude: 106.841698,
+          latitude: -5.401317,
+          longitude: 105.24838,
           name: 'Handika',
           phone: '085669682467',
           pict:
-            'https://pps.whatsapp.net/v/t61.24694-24/57586771_376603533196585_1678423947411980288_n.jpg?oe=5E6D5115&oh=daa1d89e346cb4914ec157ee0dc42549',
+            'https://instagram.ftkg1-1.fna.fbcdn.net/v/t51.2885-15/e35/32135660_168337707179036_4421957384314814464_n.jpg?_nc_ht=instagram.ftkg1-1.fna.fbcdn.net&_nc_cat=108&_nc_ohc=lL_B49m3tpYAX8OzUZX&oh=f17dbe9c44261ccaad7cd2222d34ae7a&oe=5EA02AD2',
         },
       ],
     };
   }
+
+  // getDataCity() {
+  //   Geocoder.setApiKey('AIzaSyCJqVIuMUH_LpXJVXzbEJQllFs7lxK-454');
+  //   Geocoder.getFromLatLng(this.state.currentPosition).then(
+  //     json => {
+  //       var address_component = json.result[0].formatted_address;
+  //       console.warn(address_component);
+  //     },
+  //     error => {
+  //       alert(error);
+  //     },
+  //   );
+  // }
 
   onTarget = () => {
     let location = this.state.currentPosition;
@@ -82,6 +95,7 @@ export default class Maps extends Component {
   logOut = () => {
     // alert('mama');
     AsyncStorage.clear();
+    this;
     this.props.navigation.navigate('Auth');
     this.setState({visible1: false});
   };
@@ -132,6 +146,11 @@ export default class Maps extends Component {
           animated: true,
         },
       );
+    } else {
+      this.myMap.fitToCoordinates([this.state.currentPosition], {
+        edgePadding: {top: 50, right: 50, bottom: 1400, left: 50},
+        animated: true,
+      });
     }
   };
 
@@ -180,16 +199,16 @@ export default class Maps extends Component {
     });
   }
 
-  getDataFriendList = async () => {
+  getDataFriendList = async id => {
     let dbRef = firebase
       .database()
       .ref('friend')
-      .child(User.phone);
+      .child(id.phone);
     await dbRef.on('child_added', val => {
       let person = val.val();
       person.phone = val.key;
-      if (person.phone === User.phone) {
-        User.name = person.name;
+      if (person.phone === id.phone) {
+        id.name = person.name;
       } else {
         this.setState(prevState => {
           return {
@@ -203,12 +222,13 @@ export default class Maps extends Component {
 
   componentDidMount() {
     this.getcoordinate();
-    console.warn(this.state.users);
+    // console.warn(this.state.users);
+    // this.getDataCity();
   }
 
   UNSAFE_componentWillMount() {
     this.getData();
-    this.getDataFriendList();
+    this.getDataFriendList(User);
   }
   render() {
     return this.state.currentPosition.latitude ? (
@@ -231,7 +251,7 @@ export default class Maps extends Component {
               this.setState({visible: false});
             }}
             onRequestClose={() => {
-              props.back('visible');
+              this.setState({visible: false});
             }}>
             <Chat
               chatInfo={this.state.chatInfo}
@@ -250,11 +270,18 @@ export default class Maps extends Component {
                 slideFrom: 'right',
               })
             }>
-            <Profile back={this.back} logOut={this.logOut} />
+            <Profile
+              back={this.back}
+              logOut={this.logOut}
+              dataFriend={this.state.friendList}
+            />
           </Modal>
 
           <Modal
-            style={{borderRadius: 50, paddingRight: 170}}
+            style={{
+              // borderRadius: 50,
+              paddingRight: 170,
+            }}
             transparent={true}
             visible={this.state.visible2}
             modalAnimation={
@@ -282,6 +309,7 @@ export default class Maps extends Component {
             showsTraffic
             showsMyLocationButton
             mapType={'satellite'}
+            showsCompass={true}
             initialRegion={this.state.currentPosition}>
             <Marker
               style={styles.marker}

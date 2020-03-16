@@ -46,6 +46,7 @@ export default class Login extends React.Component {
     } else {
       await AsyncStorage.setItem('userPhone', this.state.phone);
       User.phone = this.state.phone;
+      User.name = this.state.name;
       firebase
         .database()
         .ref('users/' + User.phone)

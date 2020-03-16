@@ -1,4 +1,4 @@
-const User = {
+let User = {
   phone: null,
   name: null,
 };
